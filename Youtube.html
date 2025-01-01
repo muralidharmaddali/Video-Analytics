@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YouTube Video Info</title>
+    <style>
+        .h{
+            margin-top: 120px;
+            color:black;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 20px;
+            background: url('https://www.freevector.com/uploads/vector/preview/32054/small_2x_vecteezy_VIntage_background_ir1020_copy.jpg') no-repeat center center  fixed;
+            align-items: center;
+            background-size: cover;
+            background-position: center center;
+        }
+        #fetchData {
+        background: linear-gradient(45deg, #844caf, #f32121);
+        color: white;
+        font-size: 16px;
+        padding: 12px 24px;
+        margin-top: 5 px;
+        border: none;
+        border-radius: 25px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        cursor: pointer;
+        transition: transform 0.3s, box-shadow 0.3s, background 0.3s;
+    }
+
+    #fetchData:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+        background: linear-gradient(45deg, #af4c4c, #64f321);
+    }
+
+    #fetchData:active {
+        transform: translateY(0);
+        box-shadow: 0 3px 5px rgba(255, 253, 253, 0.2);
+    }
+    
+      #videoPlayer {
+      width: 600px; 
+      height: 300px; 
+      border: 5px solid orange;
+      margin: 10px auto; 
+      margin-bottom: -15px;
+    }
+    </style>
+</head>
+<body>
+    <div class="h">
+    <h1>YouTube Video Information</h1>
+    </div>
+    <div class="video-container">
+        <iframe id="videoPlayer" src="https://www.youtube.com/embed/8f0k5n9N84w" frameborder="0" allowfullscreen></iframe><br><br><br>
+    <button id="fetchData">Get Info</button>
+    <p id="output"></p>
+
+    <script>
+        
+        async function updateTitleForAuthorizedUsers() {
+            const apiKey = 'Your API KEY';
+            const videoID = 'Video ID'; 
+            const apiUrl = `https://www.googleapis.com/youtube/v3/videos?part=snippet,statistics&id=${videoID}&key=${apiKey}`;
+
+            try {
+                const response = await fetch(apiUrl);
+                const data = await response.json();
+
+                if (data.items && data.items.length > 0) {
+                    const video = data.items[0];
+                    const videoViewsCount = video.statistics.viewCount || 'N/A';
+                    const videoLikeCount = video.statistics.likeCount || 'N/A';
+
+                    document.getElementById('output').textContent =
+                        `Views: ${videoViewsCount}, Likes: ${videoLikeCount}`;
+                } else {
+                    document.getElementById('output').textContent = 'No video data found.';
+                }
+            } catch (error) {
+                document.getElementById('output').textContent =
+                    'An error occurred: ' + error.message;
+            }
+        }
+
+        document.getElementById('fetchData').addEventListener('click', updateTitleForAuthorizedUsers);
+    </script>
+</body>
+</html>
